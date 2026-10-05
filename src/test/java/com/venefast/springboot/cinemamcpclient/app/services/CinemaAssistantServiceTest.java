@@ -38,6 +38,7 @@ class CinemaAssistantServiceTest {
         ChatClient.CallResponseSpec callResponseSpec = mock(ChatClient.CallResponseSpec.class);
 
         when(chatClient.prompt()).thenReturn(requestSpec);
+        when(requestSpec.system(any(String.class))).thenReturn(requestSpec);
         when(requestSpec.user(any(Consumer.class))).thenReturn(requestSpec);
         when(requestSpec.call()).thenReturn(callResponseSpec);
         when(callResponseSpec.content()).thenReturn("Here are the top sci-fi films: Inception, Interstellar.");

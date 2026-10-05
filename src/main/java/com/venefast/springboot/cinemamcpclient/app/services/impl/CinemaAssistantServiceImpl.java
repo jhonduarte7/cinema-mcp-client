@@ -21,6 +21,15 @@ public class CinemaAssistantServiceImpl implements CinemaAssistantService {
 
     private static final Logger log = LoggerFactory.getLogger(CinemaAssistantServiceImpl.class);
 
+    private static final String CINEMA_ASSISTANT_SYSTEM_PROMPT = """
+        You are CineBot, an intelligent and polite cinema concierge assistant.
+        You have direct access to real-time movie tools provided by the Movie MCP Server.
+        Always leverage the available tools to search movies by title, filter by genre, check ratings,
+        inspect screening schedules, and recommend movies.
+        When providing answers, be concise, polite, and structure recommendations with movie title,
+        release year, director, rating, and screening schedules when available.
+        """;
+
     private final ChatClient chatClient;
 
     @Value("${spring.ai.ollama.chat.options.model:llama3.2}")
@@ -42,12 +51,14 @@ public class CinemaAssistantServiceImpl implements CinemaAssistantService {
                 request.prompt(), request.userPreference());
 
         try {
-            var promptSpec = chatClient.prompt().user(u -> {
-                u.text(request.prompt());
-                if (request.userPreference() != null && !request.userPreference().isBlank()) {
-                    u.param("preference", request.userPreference());
-                }
-            });
+            var promptSpec = chatClient.prompt()
+                    .system(CINEMA_ASSISTANT_SYSTEM_PROMPT)
+                    .user(u -> {
+                        u.text(request.prompt());
+                        if (request.userPreference() != null && !request.userPreference().isBlank()) {
+                            u.param("preference", request.userPreference());
+                        }
+                    });
 
             String content = promptSpec.call().content();
 

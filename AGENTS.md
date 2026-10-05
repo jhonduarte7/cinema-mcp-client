@@ -37,7 +37,7 @@ The application enforces separation of concerns across the following layers:
 src/main/java/com/venefast/springboot/cinemamcpclient/app/
 ├── CinemaMcpClientApplication.java          # Spring Boot bootstrap & entry point
 ├── config/
-│   └── CinemaAssistantConfig.java           # Spring AI ChatClient setup with MCP ToolCallbackProvider
+│   └── AIConfig.java                        # Spring AI ChatClient setup with MCP ToolCallbackProvider
 ├── controllers/
 │   └── CinemaAssistantController.java       # REST endpoints at /api/cinema returning ResponseEntity<DTO>
 ├── models/
@@ -48,7 +48,7 @@ src/main/java/com/venefast/springboot/cinemamcpclient/app/
 └── services/
     ├── CinemaAssistantService.java          # Business contract operating strictly on DTO records
     └── impl/
-        └── CinemaAssistantServiceImpl.java  # Orchestration service invoking ChatClient and MCP tools
+        └── CinemaAssistantServiceImpl.java  # Orchestration service invoking ChatClient, MCP tools, and CineBot system persona
 ```
 
 ---
@@ -66,6 +66,11 @@ src/main/java/com/venefast/springboot/cinemamcpclient/app/
 - **Default Model**: `llama3.2`
 - **Temperature**: `0.7`
 - **Endpoint**: `http://localhost:11434`
+
+### 4.3 Service-Layer Concierge Persona
+- **Class**: `CinemaAssistantServiceImpl`
+- **Constant**: `CINEMA_ASSISTANT_SYSTEM_PROMPT`
+- **Rationale**: Keeps `AIConfig` clean and decoupled from application business logic, while allowing runtime prompt orchestration via `chatClient.prompt().system(...)`.
 
 ---
 
