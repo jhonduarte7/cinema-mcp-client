@@ -4,10 +4,10 @@ import com.venefast.springboot.cinemamcpclient.app.models.dtos.CinemaPromptReque
 import com.venefast.springboot.cinemamcpclient.app.models.dtos.CinemaPromptResponseDto;
 import com.venefast.springboot.cinemamcpclient.app.models.dtos.CinemaStatusDto;
 import com.venefast.springboot.cinemamcpclient.app.services.impl.CinemaAssistantServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.chat.client.ChatClient;
@@ -28,8 +28,17 @@ class CinemaAssistantServiceTest {
     @Mock
     private ChatClient chatClient;
 
-    @InjectMocks
     private CinemaAssistantServiceImpl cinemaAssistantService;
+
+    @BeforeEach
+    void setUp() {
+        cinemaAssistantService = new CinemaAssistantServiceImpl(
+            chatClient,
+            "test-model",
+            "http://localhost:8090",
+            true
+        );
+    }
 
     @Test
     @DisplayName("askAssistant should return formatted answer when model responds")
